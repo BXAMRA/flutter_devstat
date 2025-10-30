@@ -149,6 +149,16 @@ Total 5 files across 2 directories
 
 ---
 
+## Example
+
+You can try out Flutter DevStat by running the example:
+
+```bash
+dart run example/example.dart
+```
+
+---
+
 ## 🏷 License
 
 This project is licensed under the [MIT License](LICENSE).

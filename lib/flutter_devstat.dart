@@ -1,7 +1,7 @@
 /// Flutter DevStat Library
 /// Provides project structure analysis utilities.
 
-library flutter_devstat;
+library;
 
 /// The package version.
 const String devStatVersion = '1.3.0';
