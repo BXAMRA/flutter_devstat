@@ -2,7 +2,7 @@ import 'dart:io';
 
 // ============================================================
 // Flutter Project Structure Analyzer (DevStat)
-// v1.3 (Global Edition) - October 30, 2025
+// v1.3.1 (Global Edition) - October 30, 2025
 // Copyright 2025 BXAMRA
 // Website: https://bxamra.github.io/
 // ============================================================
@@ -38,7 +38,7 @@ void _printUsage() {
   print('''
 
   Flutter Project Structure Analyzer (DevStat)
-  v1.3 © BXAMRA 2025
+  v1.3.1 © BXAMRA 2025
   Website: https://bxamra.github.io/
 
   USAGE:
@@ -62,7 +62,7 @@ void _printUsage() {
 
 void _printVersion() {
   print('''
-  DevStat v1.3 (Global Edition)
+  DevStat v1.3.1 (Global Edition)
   Flutter Project Structure Analyzer
   Built: October 30, 2025
   Author: BXAMRA
@@ -140,7 +140,7 @@ class FlutterProjectAnalyzer {
 
     print('* - ' * 15 + '*');
     print('🚀 Flutter Project Structure Analyzer (DevStat)');
-    print('   v1.3 © BXAMRA 2025');
+    print('   v1.3.1 © BXAMRA 2025');
     print('🌐 https://bxamra.github.io/');
     print('* - ' * 15 + '*');
     print('Project: $projectName');

@@ -1,3 +1,8 @@
+## 1.3.1
+
+- Added LICENSE file with MIT License.
+- Improved pubspec.yaml description and metadata.
+
 ## 1.3.0
 
 - Added CLI flags:
