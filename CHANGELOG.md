@@ -1,3 +1,14 @@
+## 1.3.2
+
+- Added support for project identity configuration via `pubspec.yaml`:
+  - Optional developer metadata injection (`name`, `email`, `website`, `project`).
+  - Optional automatic copyright generation.
+- Implemented strict file header normalization:
+  - Always enforces a single path header at the top of each Dart file.
+  - Ensures exactly one blank line after headers.
+  - Updates existing headers and developer blocks in-place.
+- Improved annotation reliability and formatting consistency.
+
 ## 1.3.1
 
 - Added LICENSE file with MIT License.

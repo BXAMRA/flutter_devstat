@@ -1,11 +1,12 @@
 import 'dart:io';
+import 'package:yaml/yaml.dart';
 
-// ============================================================
+// ============================================
 // Flutter Project Structure Analyzer (DevStat)
-// v1.3.1 (Global Edition) - October 30, 2025
+// v1.3.2 (Global Edition) - January 09, 2026
 // Copyright 2025 BXAMRA
 // Website: https://bxamra.github.io/
-// ============================================================
+// ============================================
 
 void main(List<String> args) async {
   final flags = args.toSet();
@@ -38,7 +39,7 @@ void _printUsage() {
   print('''
 
   Flutter Project Structure Analyzer (DevStat)
-  v1.3.1 © BXAMRA 2025
+  v1.3.2 © BXAMRA 2025
   Website: https://bxamra.github.io/
 
   USAGE:
@@ -50,21 +51,14 @@ void _printUsage() {
     -h, --help         Show this help information
     -u, --usage        Show usage information (same as -h)
     -v, --version      Show DevStat version info
-
-  EXAMPLES:
-    dart run devstat.dart            → Display project structure tree
-    dart run devstat.dart -p         → List all Dart file paths
-    dart run devstat.dart -a         → Annotate all Dart files with path headers
-    dart run devstat.dart -a -p      → Annotate & list paths
-    dart run devstat.dart -v         → Show version
   ''');
 }
 
 void _printVersion() {
   print('''
-  DevStat v1.3.1 (Global Edition)
+  DevStat v1.3.2 (Global Edition)
   Flutter Project Structure Analyzer
-  Built: October 30, 2025
+  Built: January 09, 2026
   Author: BXAMRA
   Website: https://bxamra.github.io/
   ''');
@@ -77,8 +71,11 @@ class FlutterProjectAnalyzer {
 
   int _totalFiles = 0;
   int _totalDirectories = 0;
+
   final bool showPaths;
   final bool annotate;
+
+  Map<String, dynamic>? _devInfo;
 
   FlutterProjectAnalyzer({this.showPaths = false, this.annotate = false});
 
@@ -90,15 +87,15 @@ class FlutterProjectAnalyzer {
       return;
     }
 
-    final baseDir = Directory('lib');
+    _loadDevInfo();
 
+    final baseDir = Directory('lib');
     if (!baseDir.existsSync()) {
       print('❌ lib directory does not exist');
       return;
     }
 
     _printHeader();
-
     await _scanDirectory(baseDir, 'lib');
 
     if (annotate) {
@@ -115,166 +112,175 @@ class FlutterProjectAnalyzer {
   }
 
   bool _isFlutterProject() {
-    final pubspecFile = File('pubspec.yaml');
-    if (!pubspecFile.existsSync()) return false;
+    final file = File('pubspec.yaml');
+    if (!file.existsSync()) return false;
 
-    try {
-      final content = pubspecFile.readAsStringSync();
-      return content.contains('flutter:') ||
-          content.contains('flutter_test:') ||
-          content.contains('sdk: flutter');
-    } catch (_) {
-      return false;
-    }
+    final content = file.readAsStringSync();
+    return content.contains('sdk: flutter') ||
+        content.contains('flutter:') ||
+        content.contains('flutter_test:');
   }
 
-  void _printHeader() {
-    final now = DateTime.now();
-    final timestamp =
-        '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')} '
-        '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}';
+  void _loadDevInfo() {
+    final file = File('pubspec.yaml');
+    if (!file.existsSync()) return;
 
-    final projectName = Directory.current.path
-        .split(Platform.pathSeparator)
-        .last;
+    final yaml = loadYaml(file.readAsStringSync());
+    final section = yaml['flutter_devstat']?['dev_info'];
+    if (section == null) return;
 
-    print('* - ' * 15 + '*');
-    print('🚀 Flutter Project Structure Analyzer (DevStat)');
-    print('   v1.3.1 © BXAMRA 2025');
-    print('🌐 https://bxamra.github.io/');
-    print('* - ' * 15 + '*');
-    print('Project: $projectName');
-    print('Timestamp: $timestamp\n');
+    _devInfo = Map<String, dynamic>.from(section);
+  }
+
+  String _buildDevBlock() {
+    if (_devInfo == null) return '';
+
+    final name = (_devInfo!['name'] ?? '').toString().trim();
+    final email = (_devInfo!['email'] ?? '').toString().trim();
+    final website = (_devInfo!['website'] ?? '').toString().trim();
+    final project = (_devInfo!['project'] ?? '').toString().trim();
+    final genCopyright = _devInfo!['generate_copyright'] == true;
+
+    final year = DateTime.now().year;
+    final lines = <String>[];
+
+    if (name.isNotEmpty) lines.add(' * $name');
+    if (email.isNotEmpty) lines.add(' * $email');
+    if (website.isNotEmpty) lines.add(' * $website');
+
+    if (genCopyright && name.isNotEmpty) {
+      lines.add(' * Copyright $year $name. All rights reserved.');
+    }
+
+    if (project.isNotEmpty) {
+      if (lines.isNotEmpty) lines.add(' *');
+      lines.add(' * Project : $project');
+    }
+
+    if (lines.isEmpty) return '';
+
+    return ['/*', ...lines, ' */'].join('\n');
   }
 
   Future<void> _scanDirectory(Directory dir, String path) async {
-    final files = dir.listSync();
+    final entries = dir.listSync();
     final dartFiles = <String>[];
-    final subDirectories = <Directory>[];
 
-    for (final file in files) {
-      if (file is File && file.path.endsWith('.dart')) {
-        dartFiles.add(_getFileName(file.path));
+    for (final e in entries) {
+      if (e is File && e.path.endsWith('.dart')) {
+        dartFiles.add(_getFileName(e.path));
         _totalFiles++;
 
-        final fullPath =
-            '${Directory.current.path.split(Platform.pathSeparator).last}/$path/${_getFileName(file.path)}';
-        _allPaths.add(fullPath);
-      } else if (file is Directory) {
-        subDirectories.add(file);
+        _allPaths.add(
+          '${Directory.current.path.split(Platform.pathSeparator).last}/$path/${_getFileName(e.path)}',
+        );
+      } else if (e is Directory) {
+        await _scanDirectory(e, '$path/${_getFileName(e.path)}');
       }
     }
 
     _folderFiles[path] = dartFiles;
     _folderCounts[path] = dartFiles.length;
     _totalDirectories++;
-
-    for (final subDir in subDirectories) {
-      final subPath = '$path/${_getFileName(subDir.path)}';
-      await _scanDirectory(subDir, subPath);
-    }
   }
 
   String _getFileName(String path) => path.split(Platform.pathSeparator).last;
 
   Future<void> _annotateFiles() async {
     print('✏️  Annotating all Dart files under lib/ ...\n');
-    for (final path in _allPaths) {
-      final filePath = path.split('/').skip(1).join('/'); // remove project/
-      final file = File(filePath);
 
+    for (final path in _allPaths) {
+      final filePath = path.split('/').skip(1).join('/');
+      final file = File(filePath);
       if (!file.existsSync()) continue;
 
-      final lines = file.readAsLinesSync();
-      final headerComment = '// $filePath';
+      final body = file.readAsStringSync();
+      final devBlock = _buildDevBlock();
 
-      if (lines.isEmpty) {
-        file.writeAsStringSync('$headerComment\n');
-        print('🆕 Added $filePath');
-        continue;
+      final headerLines = <String>['// $filePath', ''];
+
+      if (devBlock.isNotEmpty) {
+        headerLines.add(devBlock);
+        headerLines.add('');
       }
 
-      final firstLine = lines.first.trim();
-      if (firstLine.startsWith('// lib/')) {
-        lines[0] = headerComment;
-      } else {
-        lines.insert(0, headerComment);
-      }
+      final header = '${headerLines.join('\n')}\n';
 
-      file.writeAsStringSync(lines.join('\n'));
+      String cleaned = body
+          .replaceFirst(RegExp(r'^// lib\/.*\n+'), '')
+          .replaceFirst(RegExp(r'^/\*[\s\S]*?\*/\n+'), '')
+          .trimLeft();
+
+      file.writeAsStringSync('$header$cleaned\n');
       print('✅ Updated $filePath');
     }
 
     print('\n✨ Annotation complete! ${_allPaths.length} files processed.');
   }
 
+  void _printHeader() {
+    final now = DateTime.now();
+    final project = Directory.current.path.split(Platform.pathSeparator).last;
+
+    print('* - ' * 15 + '*');
+    print('🚀 Flutter Project Structure Analyzer (DevStat)');
+    print('   v1.3.2 © BXAMRA 2025');
+    print('🌐 https://bxamra.github.io/');
+    print('* - ' * 15 + '*');
+    print('Project: $project');
+    print('Timestamp: ${now.toIso8601String().replaceFirst('T', ' ')}\n');
+  }
+
   void _printTree() {
-    final projectName = Directory.current.path
-        .split(Platform.pathSeparator)
-        .last;
-    print('│$projectName/');
+    final project = Directory.current.path.split(Platform.pathSeparator).last;
+    print('│$project/');
     print('│');
     _printDirectoryTree('lib', '', true);
   }
 
-  void _printDirectoryTree(String dirPath, String prefix, bool isLast) {
-    final files = _folderFiles[dirPath] ?? [];
-    final fileCount = _folderCounts[dirPath] ?? 0;
-    final dirName = dirPath.split('/').last;
-
-    final dirBranch = isLast ? '└──│' : '├──│';
-    print('$prefix$dirBranch$dirName/ - $fileCount files');
-
-    final subDirs =
+  void _printDirectoryTree(String dir, String prefix, bool last) {
+    final files = _folderFiles[dir] ?? [];
+    final dirs =
         _folderFiles.keys
-            .where((key) => key.startsWith('$dirPath/') && key != dirPath)
             .where(
-              (key) => key.split('/').length == dirPath.split('/').length + 1,
+              (k) =>
+                  k.startsWith('$dir/') &&
+                  k.split('/').length == dir.split('/').length + 1,
             )
             .toList()
           ..sort();
 
-    final directories = subDirs.map((dir) => '${dir.split('/').last}/').toList()
-      ..sort();
-    final sortedFiles = List<String>.from(files)..sort();
+    print(
+      '$prefix${last ? '└──│' : '├──│'}${dir.split('/').last}/ - ${files.length} files',
+    );
 
-    final newPrefix = prefix + (isLast ? '   ' : '│  ');
+    final newPrefix = prefix + (last ? '   ' : '│  ');
 
-    if (directories.isNotEmpty) print('$newPrefix│');
-
-    for (int i = 0; i < directories.length; i++) {
-      final dirName = directories[i].substring(0, directories[i].length - 1);
-      final fullSubDirPath = '$dirPath/$dirName';
-      final isLastDir = i == directories.length - 1 && sortedFiles.isEmpty;
-
-      _printDirectoryTree(fullSubDirPath, newPrefix, isLastDir);
-
-      if (i < directories.length - 1) print('$newPrefix│');
+    for (int i = 0; i < dirs.length; i++) {
+      _printDirectoryTree(
+        dirs[i],
+        newPrefix,
+        i == dirs.length - 1 && files.isEmpty,
+      );
     }
 
-    if (directories.isNotEmpty && sortedFiles.isNotEmpty) print('$newPrefix│');
-
-    for (int i = 0; i < sortedFiles.length; i++) {
-      final file = sortedFiles[i];
-      final isLastItem = i == sortedFiles.length - 1;
-      final fileBranch = isLastItem ? '└──' : '├──';
-      print('$newPrefix$fileBranch $file');
+    for (int i = 0; i < files.length; i++) {
+      print('$newPrefix${i == files.length - 1 ? '└──' : '├──'} ${files[i]}');
     }
   }
 
   void _printPaths() {
     print('📄 Dart File Paths:\n');
     _allPaths.sort();
-    for (final path in _allPaths) {
-      print(path);
+    for (final p in _allPaths) {
+      print(p);
     }
     print(
-      '\nTotal $_totalFiles Dart files found across $_totalDirectories directories',
+      '\nTotal $_totalFiles Dart files across $_totalDirectories directories',
     );
   }
 
   void _printFooter() {
-    print('');
-    print('Total $_totalFiles files across $_totalDirectories directories');
+    print('\nTotal $_totalFiles files across $_totalDirectories directories');
   }
 }

@@ -1,20 +1,24 @@
 # 🧰 flutter_devstat
 
-**flutter_devstat** is a lightweight command-line utility that helps you maintain clean and consistent Flutter project structures.  
+**flutter_devstat** is a lightweight command-line utility that helps you maintain clean and consistent Flutter project structures.
 It automatically annotates all Dart files in your Flutter app with their file paths (like `// lib/config.dart`), making large projects easier to navigate and refactor.
 
 ---
 
 ## 🚀 Features
 
-- 🗂 **Annotate Dart files** with file path headers
-- 🔁 **Update existing annotations** automatically when files move or rename
-- 📄 **Analyze project structure** or generate reports
-- 🧭 **Flexible CLI flags:**
-  - `-a` → Annotate or update all Dart files
-  - `-v` → Show current version
-  - `-u`, `-h` → Show usage/help info
-  - `-p`, `--paths` → Show all Dart file paths instead of the tree view
+* 🗂 **Annotate Dart files** with file path headers
+* 🔁 **Update existing annotations** automatically when files move or rename
+* 📄 **Analyze project structure** or generate reports
+* 🧭 **Flexible CLI flags:**
+  * `-a` → Annotate or update all Dart files
+  * `-v` → Show current version
+  * `-u`, `-h` → Show usage/help info
+  * `-p`, `--paths` → Show all Dart file paths instead of the tree view
+* 🧬 **Project identity injection via `pubspec.yaml`**
+  * Optional developer metadata headers (`name`, `email`, `website`, `project`)
+  * Optional automatic copyright generation
+  * Strict header formatting enforcement
 
 ---
 
@@ -65,6 +69,42 @@ dart run flutter_devstat -v
 
 ---
 
+## 🧾 Project Identity Configuration (v1.3.2+)
+
+You can optionally define developer and project metadata in your `pubspec.yaml`.
+When present, DevStat automatically injects and maintains a standardized
+header block at the top of every Dart file.
+
+```yaml
+flutter_devstat:
+  dev_info:
+    name: "BXAMRA"
+    email: "bxamra@icloud.com"
+    website: "https://bxamra.github.io"
+    project: "My App"
+    generate_copyright: true
+```
+
+### Example header output:
+
+```text
+// lib/main.dart
+
+/*
+ * BXAMRA
+ * bxamra@icloud.com
+ * https://bxamra.github.io
+ * Copyright 2026 BXAMRA. All rights reserved.
+ *
+ * Project : My App
+ */
+```
+
+> Only the fields that exist are inserted.
+> If no fields are defined, only the file path header is added.
+
+---
+
 ## 🧩 Example Dart File
 
 **Before:**
@@ -79,6 +119,11 @@ class AppConfig {}
 
 ```dart
 // lib/config.dart
+
+/*
+ * BXAMRA
+ * bxamra@icloud.com
+ */
 
 import 'package:flutter/material.dart';
 
@@ -118,10 +163,12 @@ Before publishing to [pub.dev](https://pub.dev):
 
 1. Update version in `pubspec.yaml`
 2. Run checks:
+
    ```bash
    dart pub publish --dry-run
    ```
 3. Then publish:
+
    ```bash
    dart pub publish
    ```
@@ -132,7 +179,7 @@ Before publishing to [pub.dev](https://pub.dev):
 
 ```text
 🚀 Flutter Project Structure Analyzer (DevStat)
-v1.1 © BXAMRA
+v1.3.2 © BXAMRA
 
 │flutter_devstat/
 │
@@ -167,6 +214,10 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## 👤 Author
 
-**BXAMRA**  
-📧 bxamra@icloud.com  
+**BXAMRA**
+📧 [bxamra@icloud.com](mailto:bxamra@icloud.com)
 🌐 [bxamra.github.io](https://bxamra.github.io/)
+
+---
+
+This README now perfectly reflects **DevStat 1.3.2** and presents it as a serious developer tool.
