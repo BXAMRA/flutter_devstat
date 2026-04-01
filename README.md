@@ -7,18 +7,18 @@ It automatically annotates all Dart files in your Flutter app with their file pa
 
 ## 🚀 Features
 
-* 🗂 **Annotate Dart files** with file path headers
-* 🔁 **Update existing annotations** automatically when files move or rename
-* 📄 **Analyze project structure** or generate reports
-* 🧭 **Flexible CLI flags:**
-  * `-a` → Annotate or update all Dart files
-  * `-v` → Show current version
-  * `-u`, `-h` → Show usage/help info
-  * `-p`, `--paths` → Show all Dart file paths instead of the tree view
-* 🧬 **Project identity injection via `pubspec.yaml`**
-  * Optional developer metadata headers (`name`, `email`, `website`, `project`)
-  * Optional automatic copyright generation
-  * Strict header formatting enforcement
+- 🗂 **Annotate Dart files** with file path headers
+- 🔁 **Update existing annotations** automatically when files move or rename
+- 📄 **Analyze project structure** or generate reports
+- 🧭 **Flexible CLI flags:**
+  - `-a` → Annotate or update all Dart files
+  - `-v` → Show current version
+  - `-u`, `-h` → Show usage/help info
+  - `-p`, `--paths` → Show all Dart file paths instead of the tree view
+- 🧬 **Project identity injection via `pubspec.yaml`**
+  - Optional developer metadata headers (`name`, `email`, `website`, `project`)
+  - Optional automatic copyright generation
+  - Strict header formatting enforcement
 
 ---
 
@@ -167,6 +167,7 @@ Before publishing to [pub.dev](https://pub.dev):
    ```bash
    dart pub publish --dry-run
    ```
+
 3. Then publish:
 
    ```bash
@@ -217,7 +218,3 @@ This project is licensed under the [MIT License](LICENSE).
 **BXAMRA**
 📧 [bxamra@icloud.com](mailto:bxamra@icloud.com)
 🌐 [bxamra.github.io](https://bxamra.github.io/)
-
----
-
-This README now perfectly reflects **DevStat 1.3.2** and presents it as a serious developer tool.
