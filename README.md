@@ -3,8 +3,6 @@
 **flutter_devstat** is a lightweight command-line utility that helps you maintain clean and consistent Flutter project structures.
 It automatically annotates all Dart files in your Flutter app with their file paths (like `// lib/config.dart`), making large projects easier to navigate and refactor.
 
----
-
 ## 🚀 Features
 
 - 🗂 **Annotate Dart files** with file path headers
@@ -20,8 +18,6 @@ It automatically annotates all Dart files in your Flutter app with their file pa
   - Optional automatic copyright generation
   - Strict header formatting enforcement
 
----
-
 ## 📦 Installation
 
 ### 🔹 Add to a Flutter project
@@ -35,8 +31,6 @@ flutter pub add flutter_devstat --dev
 ```bash
 dart pub global activate flutter_devstat
 ```
-
----
 
 ## 🧑‍💻 Usage
 
@@ -66,8 +60,6 @@ dart run flutter_devstat -v
 🔹 Added:   // lib/widgets/button.dart
 ✅ 23 files processed successfully.
 ```
-
----
 
 ## 🧾 Project Identity Configuration (v1.3.2+)
 
@@ -103,8 +95,6 @@ flutter_devstat:
 > Only the fields that exist are inserted.
 > If no fields are defined, only the file path header is added.
 
----
-
 ## 🧩 Example Dart File
 
 **Before:**
@@ -130,8 +120,6 @@ import 'package:flutter/material.dart';
 class AppConfig {}
 ```
 
----
-
 ## ⚙️ Development
 
 If you want to modify or contribute to the tool locally:
@@ -155,8 +143,6 @@ dart run bin/flutter_devstat.dart -a
 dart test
 ```
 
----
-
 ## 📤 Publishing (for maintainers)
 
 Before publishing to [pub.dev](https://pub.dev):
@@ -173,8 +159,6 @@ Before publishing to [pub.dev](https://pub.dev):
    ```bash
    dart pub publish
    ```
-
----
 
 ## 🧾 Example Output (Project Tree Mode)
 
@@ -195,8 +179,6 @@ v1.3.2 © BXAMRA
 Total 5 files across 2 directories
 ```
 
----
-
 ## Example
 
 You can try out Flutter DevStat by running the example:
@@ -205,13 +187,9 @@ You can try out Flutter DevStat by running the example:
 dart run example/example.dart
 ```
 
----
-
 ## 🏷 License
 
 This project is licensed under the [MIT License](LICENSE).
-
----
 
 ## 👤 Author
 

@@ -1,3 +1,7 @@
+## 1.3.4
+
+- Updated README
+
 ## 1.3.3
 
 - Fixed file annotation newline handling:
