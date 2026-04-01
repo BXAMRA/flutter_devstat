@@ -1,3 +1,9 @@
+# Changelog
+
+## 1.3.5
+
+- Fixed lib
+
 ## 1.3.4
 
 - Updated README
