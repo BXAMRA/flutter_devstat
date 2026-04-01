@@ -3,8 +3,8 @@ import 'package:yaml/yaml.dart';
 
 // ============================================
 // Flutter Project Structure Analyzer (DevStat)
-// v1.3.2 (Global Edition) - January 09, 2026
-// Copyright 2025 BXAMRA
+// v1.3.3 (Global Edition) - April 01, 2026
+// Copyright 2026 BXAMRA
 // Website: https://bxamra.github.io/
 // ============================================
 
@@ -39,7 +39,7 @@ void _printUsage() {
   print('''
 
   Flutter Project Structure Analyzer (DevStat)
-  v1.3.2 © BXAMRA 2025
+  v1.3.3 © BXAMRA 2026
   Website: https://bxamra.github.io/
 
   USAGE:
@@ -58,7 +58,7 @@ void _printVersion() {
   print('''
   DevStat v1.3.2 (Global Edition)
   Flutter Project Structure Analyzer
-  Built: January 09, 2026
+  Built: April 01, 2026
   Author: BXAMRA
   Website: https://bxamra.github.io/
   ''');
@@ -207,9 +207,9 @@ class FlutterProjectAnalyzer {
       final header = '${headerLines.join('\n')}\n';
 
       String cleaned = body
-          .replaceFirst(RegExp(r'^// lib\/.*\n+'), '')
-          .replaceFirst(RegExp(r'^/\*[\s\S]*?\*/\n+'), '')
-          .trimLeft();
+          .replaceFirst(RegExp(r'^// lib\/.*\n*'), '')
+          .replaceFirst(RegExp(r'^/\*[\s\S]*?\*/\n*'), '')
+          .replaceFirst(RegExp(r'\n*$'), ''); // only trailing newlines removed
 
       file.writeAsStringSync('$header$cleaned\n');
       print('✅ Updated $filePath');
@@ -224,7 +224,7 @@ class FlutterProjectAnalyzer {
 
     print('* - ' * 15 + '*');
     print('🚀 Flutter Project Structure Analyzer (DevStat)');
-    print('   v1.3.2 © BXAMRA 2025');
+    print('   v1.3.3 © BXAMRA 2026');
     print('🌐 https://bxamra.github.io/');
     print('* - ' * 15 + '*');
     print('Project: $project');

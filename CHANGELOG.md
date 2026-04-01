@@ -1,3 +1,19 @@
+## 1.3.3
+
+- Fixed file annotation newline handling:
+  - Prevents accumulation of extra blank lines at the end of Dart files across repeated runs.
+  - Ensures exactly one trailing newline is maintained (POSIX-compliant file ending).
+
+- Improved annotation idempotency:
+  - Re-running annotation no longer alters already-correct files.
+  - Stabilized output to avoid unnecessary formatting drift.
+
+- Refined header cleanup logic:
+  - More resilient removal of existing headers and developer blocks.
+  - Improved regex handling for edge cases with varying newline counts.
+
+- Minor internal optimizations to file write operations and formatting consistency.
+
 ## 1.3.2
 
 - Added support for project identity configuration via `pubspec.yaml`:
